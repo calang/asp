@@ -30,6 +30,19 @@ gcolor:
 	@echo '--- Show 1 solution:'
 	clingo g_coloring.lp || true
 
+# target: queens - solve graph coloring problem
+queens:
+	clingo queens.lp --const n=5 || true
+
+# target: queens-opt - solve graph coloring problem
+queens-opt:
+	clingo -c n=1000 queens-opt.lp --config=jumpy -q --stats=2 -t 10,split ; true
+
+# target: hanoi - solve towers of hanoi problem
+hanoi:
+#	clingo -c n=5 -c m=60 hanoi.lp ; true
+	clingo -c n=4 -c m=15 hanoi.lp ; true
+
 # target: jupl - start jupiter lab server
 jupl:	ALWAYS
 	#@${TF_SETENV}; jupyter lab &
