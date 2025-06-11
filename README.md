@@ -1,5 +1,8 @@
 # ASP
-Learning ASP
+Learning ASP, using [clingo](https://github.com/potassco/clingo).
+
+Mostly through development of a simple primary school 
+timetable.
 
 
 
