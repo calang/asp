@@ -36,7 +36,8 @@ requirements:	ALWAYS
 
 # target: update-env - update conda environment based on latest content of environment.yml file
 update-env:
-	$(TF_SETENV); conda env update -f env.yml
+	#$(TF_SETENV); conda env update -f env.yml
+	conda env update -f env.yml
 
 # target: rm-env - update conda environment based on latest content of environment.yml file
 rm-env:
