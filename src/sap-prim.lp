@@ -1,5 +1,7 @@
 % Horarios de primaria y preescolar
 
+#const lecc_por_sem = 40.
+
 % niveles
 % nivel(nivel)
 nivel(
