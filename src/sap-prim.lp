@@ -212,6 +212,32 @@ disp(alisson, (lun;mar;mie;jue;vie), 1..4, (a;b)).
 
 % objetivo, junto con restricciones
 
+% para cada nivel, cada período tiene un profesor y materias asignadas
+% donde
+% - la materia es un requisito del nivel
+% - el profesor puede dar esa materia
+% - el profesor está disponible en ese período
+asignable(Nivel, Materia, Profesor, Dia, Bloque, Leccion) :-
+    req(Nivel, Materia, _),
+    prof(Profesor, Nivel, Materia),
+    disp(Profesor, Dia, Bloque, Leccion),
+    bloque(Dia, Bloque, Leccion).
+
+% candidate solutions
+{   asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
+    : asignable(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
+}
+
+% en cada periodo hay solo un profesor asignado
+:- #sum { 1,Nivel,Dia,Bloque,Leccion : asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion) } != 1.
+
+% % para cada requisito, el número de lecciones asignadas deber ser igual al del requisito
+% :-  req(Nivel, Materia, Lecciones),
+%     #sum {  1,Nivel,Materia
+%             : asignado(Nivel, Materia, _Profesor, _Dia, _Bloque, _Leccion)
+%     } != Lecciones.
+
+
 % ningún resto debe ser negativo
 :- nivel(Nivel), req(Nivel, resto, L), L < 0.
 
