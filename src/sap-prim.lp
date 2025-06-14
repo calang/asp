@@ -218,6 +218,10 @@ disp(alisson, (lun;mar;mie;jue;vie), 1..4, (a;b)).
 % ninguna suma de lecciones por nivel debe ser distinta de lecc_por_sem
 :- nivel(Nivel), #sum { L,Materia,Nivel : req(Nivel, Materia, L) } != lecc_por_sem.
 
+% a ningún requisito debe faltarle un profesor que lo pueda cubrir
+:- req(Nivel, Materia, _), not prof(_, Nivel, Materia).
+
+
 % Si agregamos lo siguiente el problema ya no es satisfacible,
 % por la restricción anterior,
 % pero no es sencillo obtener un reporte de cual restricción no
