@@ -11,8 +11,8 @@ col(1..n).
 % constraints for a valid solution
 :- { queen(I,J) } != n .
 
-:- queen(I,J) , queen(I , J1), J != J1.
-:- queen(I,J) , queen(I1, J) , I != I1.
+:- queen(I,J) , queen(I, J1), J != J1.  % not on the same row
+:- queen(I,J) , queen(I1, J) , I != I1.  % not on the same column
 
-:- queen(I,J) , queen(I1, J1), (I , J ) != (I1,J1), I - J == I1 - J1.
-:- queen(I,J) , queen(I1, J1), (I , J ) != (I1,J1), I + J == I1 + J1.
+:- queen(I,J) , queen(I1, J1), (I , J ) != (I1,J1), I - J == I1 - J1.  % not on same LL-UR diagonal
+:- queen(I,J) , queen(I1, J1), (I , J ) != (I1,J1), I + J == I1 + J1.  % not on same UL-LR diagonal
