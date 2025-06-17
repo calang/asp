@@ -212,24 +212,40 @@ disp(alisson, (lun;mar;mie;jue;vie), 1..4, (a;b)).
 
 % objetivo, junto con restricciones
 
-% para cada nivel, cada período tiene un profesor y materias asignadas
-% donde
-% - la materia es un requisito del nivel
-% - el profesor puede dar esa materia
-% - el profesor está disponible en ese período
-asignable(Nivel, Materia, Profesor, Dia, Bloque, Leccion) :-
-    req(Nivel, Materia, _),
-    prof(Profesor, Nivel, Materia),
-    disp(Profesor, Dia, Bloque, Leccion),
-    bloque(Dia, Bloque, Leccion).
+% cantidad de lecciones por materia es la requerida
+% donde el profesor asignado está designado para esa materia en ese nivel
+% donde el profesor asignado en cada lección está disponible en esa lección
+% donde en cada leccion hay solo un profesor asignado
+Cant <= { asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
+            :   prof(Profesor, Nivel, Materia),
+                disp(Profesor1, Dia, Bloque, Leccion),
+                Profesor = Profesor1
+        } <= Cant
+    :- req(Nivel, Materia, Cant).
 
-% candidate solutions
-{   asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
-    : asignable(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
-}
+% cada materia en cada nivel es dada solo por un profesor
+% 1 <=    { asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
+%             :   prof(Profesor, Nivel, Materia),
+%                 bloque(Dia, Bloque, Leccion)
+%         } <= 1.
 
-% en cada periodo hay solo un profesor asignado
-:- #sum { 1,Nivel,Dia,Bloque,Leccion : asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion) } != 1.
+% % cada nivel en cada leccion tiene solo un profesor y materia asignados
+% 1 <=    { asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
+%             :   prof(Profesor, Nivel, Materia),
+%                 bloque(Dia, Bloque, Leccion)
+%         } <= 1.
+
+
+% cada materia asignada cada dia a cada nivel ocurre en lecciones consecutivas del mismo bloque
+% TODO: check what happens with Materia whose requirement is only one lesson: etica, arte
+% :- asignado(Nivel, Materia, Profesor, Dia, Bloque, b),
+%    not asignado(Nivel, Materia, Profesor, Dia, Bloque, a).
+
+
+% en cada leccion hay solo un profesor asignado
+% :- #count { 1,Nivel,Dia,Bloque,Leccion
+%               : asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
+%           } != 1.
 
 % % para cada requisito, el número de lecciones asignadas deber ser igual al del requisito
 % :-  req(Nivel, Materia, Lecciones),
@@ -267,3 +283,7 @@ asignable(Nivel, Materia, Profesor, Dia, Bloque, Leccion) :-
 %       probablemente se deben intercambiar 2 y 3 para inter,vie
 % - alisson está asignada a inter en vie,2, pero inter a esa hora tiene ingles
 %       inter tiene a alisson en vie,3, pero a esa hora ella está asignada a II etica y arte
+
+%#show nivel/1.
+%#show bloque/3.
+#show asignado/6.
