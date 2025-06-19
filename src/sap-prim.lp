@@ -298,4 +298,4 @@ disp(Profesor, Dia, Bloque, Leccion)
 
 %#show nivel/1.
 %#show bloque/3.
-#show asignado/3.
+#show asignado/6.
