@@ -2,7 +2,7 @@
 
 % :- use_module('src/scripts/timetable_base').
 :- use_module(timetable_base).
-:- ensure_loaded('tmp.pl').
+:- ensure_loaded('asignado.pl').
 
 
 % show_timetables

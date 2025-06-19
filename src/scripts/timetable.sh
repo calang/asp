@@ -27,6 +27,8 @@ clingo ../sap-prim.lp 1 2>/dev/null \
   | sed -e '/ /s//\n'/g \
   | sed -e "/SATISFIABLE/s/^/'/" -e "/SATISFIABLE/s/$/'/" \
   | sed -e 's/$/./' \
-  >tmp.pl
+  >asignado.pl \
+  || true
 
+swipl -g 'show_timetables,halt' timetable.pl
 
