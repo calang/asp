@@ -210,31 +210,53 @@ disp(sol, (lun;mar;mie;jue;vie), 1..4, (a;b)).
 disp(alisson, (lun;mar;mie;jue;vie), 1..4, (a;b)).
 
 
-% objetivo, junto con restricciones
+% --- objetivo, junto con restricciones ---
+%
+% el principal término por derivar es
+%   asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
+%
 
-% cantidad de lecciones por materia es la requerida
-% donde el profesor asignado está designado para esa materia en ese nivel
-% donde el profesor asignado en cada lección está disponible en esa lección
-% donde en cada leccion hay solo un profesor asignado
-Cant <= { asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
-            :   prof(Profesor, Nivel, Materia),
-                disp(Profesor1, Dia, Bloque, Leccion),
-                Profesor = Profesor1
-        } <= Cant
+% en cada nivel y leccion hay un profesor y materia asignados,
+% entre los posibles designados como profesor y materia para ese nivel
+{   asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
+    :   prof(Profesor, Nivel, Materia)
+} = 1
+:- nivel(Nivel), bloque(Dia, Bloque, Leccion).
+
+
+% --- proyecciones de asignado ---
+
+% un profesor está asignado a un nivel para una materia, si lo está para alguna lección.
+asignado(Nivel, Materia, Profesor) :- asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion).
+
+% una materia está asignada a un nivel en alguna lección si lo está con algún profesor
+asignado(Nivel, Materia, Dia, Bloque, Leccion)
+    :- asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion).
+
+
+% --- requerimientos adicionales ---
+
+% en cada nivel y para cada materia requerida,
+% la cantidad de lecciones asignada para esa materia es la requerida para ese nivel
+{   asignado(Nivel, Materia, Dia, Bloque, Leccion)
+    :   bloque(Dia, Bloque, Leccion)
+} = Cant
     :- req(Nivel, Materia, Cant).
 
-% cada materia en cada nivel es dada solo por un profesor
-% 1 <=    { asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
-%             :   prof(Profesor, Nivel, Materia),
-%                 bloque(Dia, Bloque, Leccion)
-%         } <= 1.
+% el profesor asignado a un nivel con una materia está designado para esa materia en ese nivel
+% Nota: por construcción de asignado/6, esto parece redundante.
+prof(Profesor, Nivel, Materia)
+    :- asignado(Nivel, Materia, Profesor, _Dia, _Bloque, _Leccion).
 
-% % cada nivel en cada leccion tiene solo un profesor y materia asignados
-% 1 <=    { asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
-%             :   prof(Profesor, Nivel, Materia),
-%                 bloque(Dia, Bloque, Leccion)
-%         } <= 1.
+% el profesor asignado en cada lección está disponible en esa lección
+disp(Profesor, Dia, Bloque, Leccion)
+    :- asignado(_Nivel, _Materia, Profesor, Dia, Bloque, Leccion).
 
+% cada materia en cada nivel es dada por un solo profesor
+{   asignado(Nivel, Materia, Profesor)
+    :   prof(Profesor, Nivel, Materia)
+} = 1
+    :- req(Nivel, Materia, _Cant).
 
 % cada materia asignada cada dia a cada nivel ocurre en lecciones consecutivas del mismo bloque
 % TODO: check what happens with Materia whose requirement is only one lesson: etica, arte
@@ -242,17 +264,7 @@ Cant <= { asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
 %    not asignado(Nivel, Materia, Profesor, Dia, Bloque, a).
 
 
-% en cada leccion hay solo un profesor asignado
-% :- #count { 1,Nivel,Dia,Bloque,Leccion
-%               : asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
-%           } != 1.
-
-% % para cada requisito, el número de lecciones asignadas deber ser igual al del requisito
-% :-  req(Nivel, Materia, Lecciones),
-%     #sum {  1,Nivel,Materia
-%             : asignado(Nivel, Materia, _Profesor, _Dia, _Bloque, _Leccion)
-%     } != Lecciones.
-
+% --- restricciones ---
 
 % ningún resto debe ser negativo
 :- nivel(Nivel), req(Nivel, resto, L), L < 0.
@@ -286,4 +298,4 @@ Cant <= { asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
 
 %#show nivel/1.
 %#show bloque/3.
-#show asignado/6.
+#show asignado/3.
