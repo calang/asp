@@ -2,6 +2,8 @@
 
 % :- use_module('src/scripts/timetable_base').
 :- use_module(timetable_base).
+
+:- dynamic([asignado/6, 'SATISFIABLE'/0]).
 :- ensure_loaded('asignado.pl').
 
 
@@ -9,6 +11,8 @@
 %
 % Displays the timetables for all levels.
 
+show_timetables :- not('SATISFIABLE'), !,
+    writeln('Timetable not satisfiable').
 show_timetables :-
     forall( nivel(Nivel),
             timetable(Nivel)

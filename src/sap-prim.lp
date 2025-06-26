@@ -14,7 +14,7 @@ nivel(
 
 req(inter, edfis, 2).
 req(inter, infor, 1).
-req(inter, ingles, 9).
+req(inter, ingles, 11).
 req(inter, musica, 1).
 
 req(trans, edfis, 2).
@@ -210,7 +210,19 @@ disp(sol, (lun;mar;mie;jue;vie), 1..4, (a;b)).
 disp(alisson, (lun;mar;mie;jue;vie), 1..4, (a;b)).
 
 
-% --- objetivo, junto con restricciones ---
+% --- restricciones sobre datos iniciales ---
+
+% ningún resto debe ser negativo
+:- nivel(Nivel), req(Nivel, resto, L), L < 0.
+
+% ninguna suma de lecciones por nivel debe ser distinta de lecc_por_sem
+:- nivel(Nivel), #sum { L,Materia,Nivel : req(Nivel, Materia, L) } != lecc_por_sem.
+
+% a ningún requisito debe faltarle un profesor que lo pueda cubrir
+:- req(Nivel, Materia, _), not prof(_, Nivel, Materia).
+
+
+% --- objetivo, junto con requerimientos adicionales ---
 %
 % el principal término por derivar es
 %   asignado(Nivel, Materia, Profesor, Dia, Bloque, Leccion)
@@ -243,6 +255,15 @@ asignado(Nivel, Materia, Dia, Bloque, Leccion)
 } = Cant
     :- req(Nivel, Materia, Cant).
 
+% para cada nivel y materia, la cantidad de lecciones asignadas en un mismo dia
+% no debe ser mayor a 2
+{   asignado(Nivel, Materia, Dia, Bloque, Leccion)
+    :   bloque(Dia, Bloque, Leccion),
+        dia(Dia)
+} <= 0
+    :-  dia(Dia),
+        req(Nivel, Materia, _Cant).
+
 % el profesor asignado a un nivel con una materia está designado para esa materia en ese nivel
 % Nota: por construcción de asignado/6, esto parece redundante.
 prof(Profesor, Nivel, Materia)
@@ -262,18 +283,6 @@ disp(Profesor, Dia, Bloque, Leccion)
 % TODO: check what happens with Materia whose requirement is only one lesson: etica, arte
 % :- asignado(Nivel, Materia, Profesor, Dia, Bloque, b),
 %    not asignado(Nivel, Materia, Profesor, Dia, Bloque, a).
-
-
-% --- restricciones ---
-
-% ningún resto debe ser negativo
-:- nivel(Nivel), req(Nivel, resto, L), L < 0.
-
-% ninguna suma de lecciones por nivel debe ser distinta de lecc_por_sem
-:- nivel(Nivel), #sum { L,Materia,Nivel : req(Nivel, Materia, L) } != lecc_por_sem.
-
-% a ningún requisito debe faltarle un profesor que lo pueda cubrir
-:- req(Nivel, Materia, _), not prof(_, Nivel, Materia).
 
 
 % Si agregamos lo siguiente el problema ya no es satisfacible,

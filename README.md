@@ -27,9 +27,21 @@ timetable.
 - [SourceForge mailing list](https://sourceforge.net/p/potassco/mailman/)
 - [What type of characterization is used in SWI-Prolog S(Casp) library to solve constraint problems](https://www.perplexity.ai/search/what-type-of-characterization-Y6UAy4zkSTOx1_mwNVUZkA)
   - how does it compare to the clingo ASP solver and its variants, like clingoDL, clingoLP or clingcon?
+[ASP-Core-2 Input Language Format](https://www.mat.unical.it/aspcomp2013/files/ASP-CORE-2.03c.pdf)
+  - [local pdf](docs/articles/ASP-CORE-2.03c.pdf)
 
 ## Systems
 - [Potassco systems pdf](docs/articles/potassco-systems.pdf)
 - [teaspoon: Solving the Curriculum-Based Course Timetabling Problems with Answer Set Programming](https://www.cs.uni-potsdam.de/wv/publications/DBLP_journals/anor/BanbaraIKOSSTW19.pdf)
   - [teaspoon-CB-CTT-2019.pdf](docs/articles/teaspoon-CB-CTT-2019.pdf)
   - [teaspoon-CB-CTT-2016.pdf](docs/articles/teaspoon-CB-CTT-2016.pdf)
+- [DLVSystem - legacy](https://www.dlvsystem.it/dlvsite/)
+  - DLV
+  - ASPIDE
+  - [DLV User Manual](https://www.dlvsystem.it/dlvsite/dlv-user-manual/)
+- For download of most recent versions
+  - [DLV](https://dlv.demacs.unical.it/home) 
+    (U.de Callabria)
+  - [I-DLV](https://github.com/DeMaCS-UNICAL/I-DLV/wiki/External-Computations,-Interoperability-and-Linguistic-Extensions)
+    - External Computations, Interoperability and Linguistic Extensions
+- [ARVis - Answer Set Relationship Visualizer](https://www.dbai.tuwien.ac.at/research/project/arvis/)
